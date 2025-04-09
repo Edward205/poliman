@@ -56,8 +56,16 @@ sdl3_proj = cmake.subproject('sdl3', options: sdl_opts)
 sdl3_dep = sdl3_proj.dependency('SDL3-static')
 
 pacman_source_files = [
+	'src/sdl_uclibc_stub.c',
+
+    'include/pacman_game.h',
+    'include/player.h',
+    'include/ui.h',
+
     'src/main.cpp',
-	'src/sdl_uclibc_stub.c'
+    'src/pacman_game.cpp',
+    'src/player.cpp',
+    'src/ui.cpp',
 ]
 
 pacman_dependencies = [

@@ -3,4 +3,5 @@
         "-background-index",
         "-compile-commands-dir=builddir"
     ],
+    "C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild",
 }

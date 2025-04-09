@@ -1,7 +1,6 @@
 #include "SDL3/SDL_init.h"
 #include <iostream>
 
-
 int main() {
   const int window_width = 800;
   const int window_height = 600;
