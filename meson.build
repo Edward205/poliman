@@ -59,12 +59,12 @@ pacman_source_files = [
 	'src/sdl_uclibc_stub.c',
 
     'include/pacman_game.h',
-    'include/player.h',
+    'include/entity.h',
     'include/ui.h',
 
     'src/main.cpp',
     'src/pacman_game.cpp',
-    'src/player.cpp',
+    'src/entity.cpp',
     'src/ui.cpp',
 ]
 
