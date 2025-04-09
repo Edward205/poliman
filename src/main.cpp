@@ -1,8 +1,7 @@
 #include "SDL3/SDL_init.h"
-#include "SDL3/SDL.h"
-#include <cstddef>
 #include <iostream>
 
+#include "SDL3/SDL_timer.h"
 #include "include/entity.h"
 
 class Player : public Entity {
@@ -17,13 +16,18 @@ public:
     SDL_SetRenderDrawColor(renderer, 255, 50, 25, 255);
     SDL_RenderPoint(renderer, x, y);
   }
+
+  ~Player()
+  {
+    
+  }
 };
 
 int main() {
   const int window_width = 800;
   const int window_height = 600;
 
-  if (!SDL_Init(SDL_INIT_VIDEO && SDL_INIT_AUDIO )) {
+  if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO )) {
     std::cerr << "SDL_Init failed: " << SDL_GetError() << std::endl;
     return EXIT_FAILURE;
   }
