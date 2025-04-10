@@ -2,7 +2,7 @@ project(
     'pacman',
     ['c', 'cpp'],
     default_options: [
-        'cpp_std=gnu++20',
+        # 'cpp_std=gnu++20',
         'warning_level=2',
     ],
 )
@@ -84,6 +84,39 @@ if host == 'windows'
         imm32_dep,
         version_dep,
     ]
+endif
+
+# macOS specific dependencies
+if host == 'darwin'
+  coreaudio_dep = dependency('CoreAudio')
+  audiotoolbox_dep = dependency('AudioToolbox')
+  corefoundation_dep = dependency('CoreFoundation')
+  coregraphics_dep = dependency('CoreGraphics')
+  corevideo_dep = dependency('CoreVideo')
+  iokit_dep = dependency('IOKit')
+  forcefeedback_dep = dependency('ForceFeedback')
+  carbon_dep = dependency('Carbon')
+  metal_dep = dependency('Metal')
+  foundation_dep = dependency('Foundation')
+  appkit_dep = dependency('AppKit')
+  uniformtypeidentifiers_dep = dependency('UniformTypeIdentifiers')
+  quartzcore_dep = dependency('QuartzCore')
+
+  pacman_dependencies += [
+      coreaudio_dep,
+      audiotoolbox_dep,
+      corefoundation_dep,
+      coregraphics_dep,
+      corevideo_dep,
+      iokit_dep,
+      forcefeedback_dep,
+      carbon_dep,
+      metal_dep,
+      foundation_dep,
+      appkit_dep,
+      uniformtypeidentifiers_dep,
+      quartzcore_dep, 
+  ]
 endif
 
 executable(

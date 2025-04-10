@@ -1,20 +1,38 @@
-#include "SDL3/SDL_init.h"
 #include <iostream>
 
 #include "SDL3/SDL_timer.h"
+#include "SDL3/SDL_init.h"
+#include "SDL3/SDL_assert.h"
+#include "SDL3/SDL_keyboard.h"
 #include "include/entity.h"
+#include "include/pacman_game.h"
 
 class Player : public Entity {
 public:
-  void handleInput(SDL_Event *e) {
-
+void handleInput(SDL_Event *e) {
+    const bool* keys = SDL_GetKeyboardState(NULL);
+    if(keys[SDL_SCANCODE_W]) {
+        --y;
+    } else if (keys[SDL_SCANCODE_S]) {
+        ++y;
+    } else if(keys[SDL_SCANCODE_A]) {
+        --x;
+    } else if (keys[SDL_SCANCODE_D]) {
+        ++x;
+    }
   }
   void tick() {
-    ++x;
+
   }
   void render(SDL_Renderer *renderer) {
     SDL_SetRenderDrawColor(renderer, 255, 50, 25, 255);
-    SDL_RenderPoint(renderer, x, y);
+
+    SDL_FRect rect;
+    rect.x = x;
+    rect.y = y;
+    rect.w = 10;
+    rect.h = 10;
+    SDL_RenderRect(renderer, &rect);
   }
 
   ~Player()
@@ -22,6 +40,8 @@ public:
     
   }
 };
+
+PacmanGame game;
 
 int main() {
   const int window_width = 800;
@@ -42,6 +62,7 @@ int main() {
   SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
 
   Player player;
+  game.player = &player;
 
   bool is_running = true;
   while (is_running) {
@@ -51,18 +72,20 @@ int main() {
         break;
 
       switch (event.type) {
-      case SDL_EVENT_QUIT: {
-        is_running = false;
-      } break;
+        case SDL_EVENT_QUIT: {
+          is_running = false;
+        } break;
       }
-    }
 
+    }
+    
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-
+    
     // game code
-    player.tick();
-    player.render(renderer);
+    player.handleInput(&event);
+    game.tick();
+    game.render(renderer);
 
     SDL_RenderPresent(renderer);
 
