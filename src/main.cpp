@@ -7,54 +7,96 @@
 #include "include/entity.h"
 #include "include/pacman_game.h"
 
-class Player : public Entity {
+class Player : public Entity
+{
 public:
-void handleInput(SDL_Event *e) {
-    const bool* keys = SDL_GetKeyboardState(NULL);
-    if(keys[SDL_SCANCODE_W]) {
-        --y;
-    } else if (keys[SDL_SCANCODE_S]) {
-        ++y;
-    } else if(keys[SDL_SCANCODE_A]) {
-        --x;
-    } else if (keys[SDL_SCANCODE_D]) {
-        ++x;
+  int *board;
+  void handleInput(SDL_Event *e)
+  {
+    const bool *keys = SDL_GetKeyboardState(NULL);
+
+    if (x == desired_x && y == desired_y)
+    {
+      if (keys[SDL_SCANCODE_W])
+        last_key = 0;
+      else if (keys[SDL_SCANCODE_S])
+        last_key = 2;
+      else if (keys[SDL_SCANCODE_A])
+        last_key = 3;
+      else if (keys[SDL_SCANCODE_D])
+        last_key = 1;
+
+      if(last_key == 0)
+        --grid_y;
+      else if(last_key == 2)
+        ++grid_y;
+      else if(last_key == 3)
+        --grid_x;
+      else if(last_key == 1)
+        ++grid_x;
     }
   }
-  void tick() {
+  void tick()
+  {
+    int desired_speed = 4;
 
+    desired_x = grid_x * (800 / BOARD_WIDTH) - (sprite.w / 2 + ((800 / BOARD_WIDTH) / 2));
+    desired_y = grid_y * (600 / BOARD_HEIGHT) - (sprite.h / 2 + ((600 / BOARD_HEIGHT) / 2));
+
+    if (x > desired_x - desired_speed && x < desired_x + desired_speed)
+      x = desired_x;
+    if (y > desired_y - desired_speed && y < desired_y + desired_speed)
+      y = desired_y;
+
+    if (x != desired_x)
+      if (x < desired_x)
+        x += desired_speed;
+      else
+        x -= desired_speed;
+
+    if (y != desired_y)
+      if (y < desired_y)
+        y += desired_speed;
+      else
+        y -= desired_speed;
   }
-  void render(SDL_Renderer *renderer) {
-    SDL_SetRenderDrawColor(renderer, 255, 50, 25, 255);
+  void render(SDL_Renderer *renderer)
+  {
+    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
 
-    SDL_FRect rect;
-    rect.x = x;
-    rect.y = y;
-    rect.w = 10;
-    rect.h = 10;
-    SDL_RenderRect(renderer, &rect);
+    sprite.w = 11;
+    sprite.h = 11;
+    sprite.x = x;
+    sprite.y = y;
+    SDL_RenderFillRect(renderer, &sprite);
   }
 
   ~Player()
   {
-    
+
   }
+
+private:
+  int last_key = 0;
 };
 
 PacmanGame game;
 
-int main() {
+int main()
+{
   const int window_width = 800;
   const int window_height = 600;
 
-  if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO )) {
+  if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO))
+  {
     std::cerr << "SDL_Init failed: " << SDL_GetError() << std::endl;
     return EXIT_FAILURE;
   }
 
   SDL_Window *window = SDL_CreateWindow("Pacman", window_width, window_height, 0);
 
-  if (!window) {
+  if (!window)
+  {
     std::cerr << "SDL_CreateWindow failed: " << SDL_GetError() << std::endl;
     return EXIT_FAILURE;
   }
@@ -62,28 +104,39 @@ int main() {
   SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
 
   Player player;
+  player.x = 0;
+  player.y = 0;
+  player.grid_x = 10;
+  player.grid_y = 10;
+  player.board = *game.board;
+
   game.player = &player;
 
   bool is_running = true;
-  while (is_running) {
+  while (is_running)
+  {
     SDL_Event event = {0};
-    while (SDL_PollEvent(&event)) {
+    while (SDL_PollEvent(&event))
+    {
       if (!is_running)
         break;
 
-      switch (event.type) {
-        case SDL_EVENT_QUIT: {
-          is_running = false;
-        } break;
+      switch (event.type)
+      {
+      case SDL_EVENT_QUIT:
+      {
+        is_running = false;
       }
-
+      break;
+      }
     }
-    
+
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    
+
     // game code
     player.handleInput(&event);
+
     game.tick();
     game.render(renderer);
 
