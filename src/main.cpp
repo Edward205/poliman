@@ -59,6 +59,31 @@ public:
         y += desired_speed;
       else
         y -= desired_speed;
+
+    if(grid_x > BOARD_WIDTH)
+    {
+      grid_x = 0;
+      desired_x = 0;
+      x = 0;
+    }
+    if(grid_x < 0)
+    {
+      grid_x = BOARD_WIDTH;
+      desired_x = 800;
+      x = 800;
+    }
+    if(grid_y > BOARD_HEIGHT)
+    {
+      grid_y = 0;
+      desired_y = 0;
+      y = 0;
+    }
+    if(grid_y < 0)
+    {
+      grid_y = BOARD_HEIGHT;
+      desired_y = 600;
+      y = 600;
+    }
   }
   void render(SDL_Renderer *renderer)
   {
