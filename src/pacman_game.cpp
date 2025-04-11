@@ -2,7 +2,10 @@
 
 void PacmanGame::tick()
 {
+    // tick the player first
     player->tick();
+
+    // tick all entities in the game
     for(auto entity : entities)
     {
         entity->tick();
@@ -11,17 +14,25 @@ void PacmanGame::tick()
 
 void PacmanGame::render(SDL_Renderer* renderer)
 {
+    // render the tile grid
     for(int i = 0; i < BOARD_HEIGHT; ++i)
     {
         for(int j = 0; j < BOARD_WIDTH; ++j)
         {
-            SDL_SetRenderDrawColor(renderer, 0, 100, 255, 255);
-            tile.x = (tile.w) * j;
-            tile.y = (tile.h) * i;
-            SDL_RenderRect(renderer, &tile);
+            if(board[i][j] == 1)
+            {
+                SDL_SetRenderDrawColor(renderer, 0, 100, 255, 255);
+                tile.x = (tile.w) * j;
+                tile.y = (tile.h) * i;
+                SDL_RenderRect(renderer, &tile);
+            }
         }
     }
+
+    // render the player first
     player->render(renderer);
+
+    // render all entities in the game
     for(auto entity : entities)
     {
         entity->render(renderer);
@@ -30,5 +41,6 @@ void PacmanGame::render(SDL_Renderer* renderer)
 
 PacmanGame::~PacmanGame()
 {
-
+    // destructor
+    // free entities'/players' spirtes ...
 }

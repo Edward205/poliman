@@ -10,75 +10,87 @@
 class Player : public Entity
 {
 public:
-  int *board;
+  int (*board)[BOARD_WIDTH];
   void handleInput(SDL_Event *e)
   {
     const bool *keys = SDL_GetKeyboardState(NULL);
 
-    if (x == desired_x && y == desired_y)
+    if (x == desired_x && y == desired_y) // read keys only when the player is in its desired position
     {
-      if (keys[SDL_SCANCODE_W])
-        last_key = 0;
-      else if (keys[SDL_SCANCODE_S])
-        last_key = 2;
-      else if (keys[SDL_SCANCODE_A])
-        last_key = 3;
-      else if (keys[SDL_SCANCODE_D])
-        last_key = 1;
+      if (keys[SDL_SCANCODE_W] && isValidDirection(0))
+        direction = 0;
+      else if (keys[SDL_SCANCODE_S] && isValidDirection(2))
+        direction = 2;
+      else if (keys[SDL_SCANCODE_A] && isValidDirection(3))
+        direction = 3;
+      else if (keys[SDL_SCANCODE_D] && isValidDirection(1))
+        direction = 1;
 
-      if(last_key == 0)
+      if (direction == 0 && isValidDirection(0))
         --grid_y;
-      else if(last_key == 2)
+      else if (direction == 2 && isValidDirection(2))
         ++grid_y;
-      else if(last_key == 3)
+      else if (direction == 3 && isValidDirection(3))
         --grid_x;
-      else if(last_key == 1)
+      else if (direction == 1 && isValidDirection(1))
         ++grid_x;
     }
   }
   void tick()
   {
-    int desired_speed = 4;
-
+    // logic for smooth movment
+    // set the desired position to the middle of the cell which the player should be in
     desired_x = grid_x * (800 / BOARD_WIDTH) - (sprite.w / 2 + ((800 / BOARD_WIDTH) / 2));
     desired_y = grid_y * (600 / BOARD_HEIGHT) - (sprite.h / 2 + ((600 / BOARD_HEIGHT) / 2));
 
+    // if the player's position is in range of the desired position, set it exactly to the desired position
     if (x > desired_x - desired_speed && x < desired_x + desired_speed)
       x = desired_x;
     if (y > desired_y - desired_speed && y < desired_y + desired_speed)
       y = desired_y;
+    
+    // check if the current direction is valid (does not hit a wall)
+    if(!isValidDirection(direction))
+      direction = 5; // stop his movment by setting the direction to something else
 
+    // if the player is not in the desired position, move him towards it
     if (x != desired_x)
+    {
       if (x < desired_x)
         x += desired_speed;
       else
         x -= desired_speed;
+    }
 
     if (y != desired_y)
+    {
       if (y < desired_y)
         y += desired_speed;
       else
         y -= desired_speed;
+    }
+    
 
-    if(grid_x > BOARD_WIDTH)
+    // wrap-around logic
+    if (grid_x > BOARD_WIDTH)
     {
       grid_x = 0;
       desired_x = 0;
       x = 0;
     }
-    if(grid_x < 0)
+    if (grid_x < 0)
     {
       grid_x = BOARD_WIDTH;
       desired_x = 800;
       x = 800;
     }
-    if(grid_y > BOARD_HEIGHT)
+    if (grid_y > BOARD_HEIGHT)
     {
       grid_y = 0;
       desired_y = 0;
       y = 0;
     }
-    if(grid_y < 0)
+    if (grid_y < 0)
     {
       grid_y = BOARD_HEIGHT;
       desired_y = 600;
@@ -98,11 +110,24 @@ public:
 
   ~Player()
   {
-
   }
 
 private:
-  int last_key = 0;
+  int desired_speed = 4;
+
+  bool isValidDirection(int direction)
+  {
+    // check if ahead of the player is a wall
+    if(direction == 0 && board[grid_y - 2][grid_x - 1] == 1)
+      return false;
+    if(direction == 1 && board[grid_y - 1][grid_x] == 1)
+      return false;
+    if(direction == 2 && board[grid_y][grid_x - 1] == 1)
+      return false;
+    if(direction == 3 && board[grid_y - 1][grid_x - 2] == 1)
+      return false;
+    return true;
+  }
 };
 
 PacmanGame game;
@@ -133,13 +158,14 @@ int main()
   player.y = 0;
   player.grid_x = 10;
   player.grid_y = 10;
-  player.board = *game.board;
+  player.board = game.board;
 
   game.player = &player;
 
   bool is_running = true;
   while (is_running)
   {
+    // handle input events
     SDL_Event event = {0};
     while (SDL_PollEvent(&event))
     {
@@ -148,25 +174,27 @@ int main()
 
       switch (event.type)
       {
-      case SDL_EVENT_QUIT:
+      case SDL_EVENT_QUIT: // pressing the close button
       {
-        is_running = false;
+        is_running = false; // end the main loop
       }
       break;
       }
     }
 
+    // clear the screen to prepare for the next frame
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
     // game code
     player.handleInput(&event);
-
     game.tick();
     game.render(renderer);
 
+    // display the frame (flip buffer)
     SDL_RenderPresent(renderer);
 
+    // shoddy way to cap the FPS, should work fine for now
     SDL_Delay(20);
   }
 
