@@ -10,7 +10,7 @@
 class Player : public Entity
 {
 public:
-  int *board;
+  int (*board)[BOARD_WIDTH];
   void handleInput(SDL_Event *e)
   {
     const bool *keys = SDL_GetKeyboardState(NULL);
@@ -18,29 +18,29 @@ public:
     if (x == desired_x && y == desired_y) // read keys only when the player is in its desired position
     {
       if (keys[SDL_SCANCODE_W])
-        last_key = 0;
+        direction = 0;
       else if (keys[SDL_SCANCODE_S])
-        last_key = 2;
+        direction = 2;
       else if (keys[SDL_SCANCODE_A])
-        last_key = 3;
+        direction = 3;
       else if (keys[SDL_SCANCODE_D])
-        last_key = 1;
+        direction = 1;
 
-      if(last_key == 0)
+      if (direction == 0)
         --grid_y;
-      else if(last_key == 2)
+      else if (direction == 2)
         ++grid_y;
-      else if(last_key == 3)
+      else if (direction == 3)
         --grid_x;
-      else if(last_key == 1)
+      else if (direction == 1)
         ++grid_x;
     }
   }
   void tick()
   {
     // logic for smooth movment
-    // set the desired position to the middle of the cell which the player should be in 
-    desired_x = grid_x * (800 / BOARD_WIDTH) - (sprite.w / 2 + ((800 / BOARD_WIDTH) / 2)); 
+    // set the desired position to the middle of the cell which the player should be in
+    desired_x = grid_x * (800 / BOARD_WIDTH) - (sprite.w / 2 + ((800 / BOARD_WIDTH) / 2));
     desired_y = grid_y * (600 / BOARD_HEIGHT) - (sprite.h / 2 + ((600 / BOARD_HEIGHT) / 2));
 
     // if the player's position is in range of the desired position, set it exactly to the desired position
@@ -48,40 +48,56 @@ public:
       x = desired_x;
     if (y > desired_y - desired_speed && y < desired_y + desired_speed)
       y = desired_y;
+    
+    // if ahead of the player is a wall, stop his movment by setting the direction to something else
+    if(direction == 0 && board[grid_y - 2][grid_x - 1] == 1)
+      // directia 5
+      direction = 5;
+    if(direction == 1 && board[grid_y - 1][grid_x] == 1)
+      direction = 5;
+    if(direction == 2 && board[grid_y][grid_x - 1] == 1)
+      direction = 5;
+    if(direction == 3 && board[grid_y - 1][grid_x - 2] == 1)
+      direction = 5;
 
     // if the player is not in the desired position, move him towards it
     if (x != desired_x)
+    {
       if (x < desired_x)
         x += desired_speed;
       else
         x -= desired_speed;
+    }
 
     if (y != desired_y)
+    {
       if (y < desired_y)
         y += desired_speed;
       else
         y -= desired_speed;
+    }
+    
 
     // wrap-around logic
-    if(grid_x > BOARD_WIDTH)
+    if (grid_x > BOARD_WIDTH)
     {
       grid_x = 0;
       desired_x = 0;
       x = 0;
     }
-    if(grid_x < 0)
+    if (grid_x < 0)
     {
       grid_x = BOARD_WIDTH;
       desired_x = 800;
       x = 800;
     }
-    if(grid_y > BOARD_HEIGHT)
+    if (grid_y > BOARD_HEIGHT)
     {
       grid_y = 0;
       desired_y = 0;
       y = 0;
     }
-    if(grid_y < 0)
+    if (grid_y < 0)
     {
       grid_y = BOARD_HEIGHT;
       desired_y = 600;
@@ -101,11 +117,9 @@ public:
 
   ~Player()
   {
-
   }
 
 private:
-  int last_key = 0;
   int desired_speed = 4;
 };
 
@@ -137,14 +151,14 @@ int main()
   player.y = 0;
   player.grid_x = 10;
   player.grid_y = 10;
-  player.board = *game.board;
+  player.board = game.board;
 
   game.player = &player;
 
   bool is_running = true;
   while (is_running)
   {
-    // handle events
+    // handle input events
     SDL_Event event = {0};
     while (SDL_PollEvent(&event))
     {
@@ -153,9 +167,9 @@ int main()
 
       switch (event.type)
       {
-      case SDL_EVENT_QUIT:
+      case SDL_EVENT_QUIT: // pressing the close button
       {
-        is_running = false;
+        is_running = false; // end the main loop
       }
       break;
       }
@@ -164,7 +178,7 @@ int main()
     // clear the screen to prepare for the next frame
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    
+
     // game code
     player.handleInput(&event);
     game.tick();
