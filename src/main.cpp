@@ -17,22 +17,22 @@ public:
 
     if (x == desired_x && y == desired_y) // read keys only when the player is in its desired position
     {
-      if (keys[SDL_SCANCODE_W])
+      if (keys[SDL_SCANCODE_W] && isValidDirection(0))
         direction = 0;
-      else if (keys[SDL_SCANCODE_S])
+      else if (keys[SDL_SCANCODE_S] && isValidDirection(2))
         direction = 2;
-      else if (keys[SDL_SCANCODE_A])
+      else if (keys[SDL_SCANCODE_A] && isValidDirection(3))
         direction = 3;
-      else if (keys[SDL_SCANCODE_D])
+      else if (keys[SDL_SCANCODE_D] && isValidDirection(1))
         direction = 1;
 
-      if (direction == 0)
+      if (direction == 0 && isValidDirection(0))
         --grid_y;
-      else if (direction == 2)
+      else if (direction == 2 && isValidDirection(2))
         ++grid_y;
-      else if (direction == 3)
+      else if (direction == 3 && isValidDirection(3))
         --grid_x;
-      else if (direction == 1)
+      else if (direction == 1 && isValidDirection(1))
         ++grid_x;
     }
   }
@@ -49,16 +49,9 @@ public:
     if (y > desired_y - desired_speed && y < desired_y + desired_speed)
       y = desired_y;
     
-    // if ahead of the player is a wall, stop his movment by setting the direction to something else
-    if(direction == 0 && board[grid_y - 2][grid_x - 1] == 1)
-      // directia 5
-      direction = 5;
-    if(direction == 1 && board[grid_y - 1][grid_x] == 1)
-      direction = 5;
-    if(direction == 2 && board[grid_y][grid_x - 1] == 1)
-      direction = 5;
-    if(direction == 3 && board[grid_y - 1][grid_x - 2] == 1)
-      direction = 5;
+    // check if the current direction is valid (does not hit a wall)
+    if(!isValidDirection(direction))
+      direction = 5; // stop his movment by setting the direction to something else
 
     // if the player is not in the desired position, move him towards it
     if (x != desired_x)
@@ -121,6 +114,20 @@ public:
 
 private:
   int desired_speed = 4;
+
+  bool isValidDirection(int direction)
+  {
+    // check if ahead of the player is a wall
+    if(direction == 0 && board[grid_y - 2][grid_x - 1] == 1)
+      return false;
+    if(direction == 1 && board[grid_y - 1][grid_x] == 1)
+      return false;
+    if(direction == 2 && board[grid_y][grid_x - 1] == 1)
+      return false;
+    if(direction == 3 && board[grid_y - 1][grid_x - 2] == 1)
+      return false;
+    return true;
+  }
 };
 
 PacmanGame game;
