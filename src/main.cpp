@@ -15,7 +15,7 @@ public:
   {
     const bool *keys = SDL_GetKeyboardState(NULL);
 
-    if (x == desired_x && y == desired_y)
+    if (x == desired_x && y == desired_y) // read keys only when the player is in its desired position
     {
       if (keys[SDL_SCANCODE_W])
         last_key = 0;
@@ -38,16 +38,18 @@ public:
   }
   void tick()
   {
-    int desired_speed = 4;
-
-    desired_x = grid_x * (800 / BOARD_WIDTH) - (sprite.w / 2 + ((800 / BOARD_WIDTH) / 2));
+    // logic for smooth movment
+    // set the desired position to the middle of the cell which the player should be in 
+    desired_x = grid_x * (800 / BOARD_WIDTH) - (sprite.w / 2 + ((800 / BOARD_WIDTH) / 2)); 
     desired_y = grid_y * (600 / BOARD_HEIGHT) - (sprite.h / 2 + ((600 / BOARD_HEIGHT) / 2));
 
+    // if the player's position is in range of the desired position, set it exactly to the desired position
     if (x > desired_x - desired_speed && x < desired_x + desired_speed)
       x = desired_x;
     if (y > desired_y - desired_speed && y < desired_y + desired_speed)
       y = desired_y;
 
+    // if the player is not in the desired position, move him towards it
     if (x != desired_x)
       if (x < desired_x)
         x += desired_speed;
@@ -60,6 +62,7 @@ public:
       else
         y -= desired_speed;
 
+    // wrap-around logic
     if(grid_x > BOARD_WIDTH)
     {
       grid_x = 0;
@@ -103,6 +106,7 @@ public:
 
 private:
   int last_key = 0;
+  int desired_speed = 4;
 };
 
 PacmanGame game;
@@ -140,6 +144,7 @@ int main()
   bool is_running = true;
   while (is_running)
   {
+    // handle events
     SDL_Event event = {0};
     while (SDL_PollEvent(&event))
     {
@@ -156,17 +161,19 @@ int main()
       }
     }
 
+    // clear the screen to prepare for the next frame
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-
+    
     // game code
     player.handleInput(&event);
-
     game.tick();
     game.render(renderer);
 
+    // display the frame (flip buffer)
     SDL_RenderPresent(renderer);
 
+    // shoddy way to cap the FPS, should work fine for now
     SDL_Delay(20);
   }
 
