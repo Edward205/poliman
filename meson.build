@@ -60,11 +60,15 @@ pacman_source_files = [
 
     'include/pacman_game.h',
     'include/entity.h',
+    'include/player.h',
+    'include/ghost.h',
     'include/ui.h',
 
     'src/main.cpp',
     'src/pacman_game.cpp',
     'src/entity.cpp',
+    'src/player.cpp',
+    'src/ghost.cpp',
     'src/ui.cpp',
 ]
 

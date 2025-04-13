@@ -42,5 +42,5 @@ void PacmanGame::render(SDL_Renderer* renderer)
 PacmanGame::~PacmanGame()
 {
     // destructor
-    // free entities'/players' spirtes ...
+    // free entities/players spirtes ...
 }
