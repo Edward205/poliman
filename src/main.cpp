@@ -1,14 +1,11 @@
 #include <iostream>
-#include <vector>
 
 #include "SDL3/SDL_timer.h"
 #include "SDL3/SDL_init.h"
 
-#include "include/entity.h"
+#include "include/ghost.h"
 #include "include/pacman_game.h"
 #include "include/player.h"
-
-
 
 PacmanGame game;
 
@@ -36,11 +33,16 @@ int main()
   Player player;
   player.x = 0;
   player.y = 0;
-  player.grid_x = 10;
-  player.grid_y = 10;
+  player.grid_x = 2;
+  player.grid_y = 2;
   player.board = game.board;
 
   game.player = &player;
+
+  Ghost ghost;
+  ghost.player = &player;
+  ghost.board = game.board;
+  game.entities.push_back(&ghost);
 
   bool is_running = true;
   while (is_running)
