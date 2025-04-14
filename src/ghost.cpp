@@ -3,6 +3,12 @@
 #include "include/pacman_game.h"
 #include <stdio.h>
 
+Ghost::Ghost(Player* player, int(*board)[BOARD_WIDTH])
+{
+  this->player = player;
+  this->board = board;
+}
+
 void Ghost::tick()
 {
   board_graph.clear();
@@ -23,13 +29,13 @@ void Ghost::tick()
     board_graph.push_back(aux);
   }
 
-  printf("%d, %d, %d: ", player->grid_x, player->grid_y, xyToIndex(player->grid_x, player->grid_y));
+  /*printf("%d, %d, %d: ", player->grid_x, player->grid_y, xyToIndex(player->grid_x, player->grid_y));
 
   for(int i = 0; i < board_graph[player->grid_x * player->grid_y].size(); ++i)
   {
     printf("%d ", board_graph[player->grid_x * player->grid_y][i]);
   }
-  printf("\n");
+  printf("\n");*/
 }
 
 void Ghost::render(SDL_Renderer *renderer)

@@ -1,6 +1,15 @@
 #include "SDL3/SDL_render.h"
 #include "include/player.h"
 
+Player::Player(int x, int y, int grid_x, int grid_y, int (*board)[BOARD_WIDTH])
+{
+  this->x = x;
+  this->y = y;
+  this->grid_x = grid_x;
+  this->grid_y = grid_y;
+  this->board = board;
+}
+
 void Player::handleInput()
 {
     const bool *keys = SDL_GetKeyboardState(NULL);

@@ -6,6 +6,7 @@
 
 class Player: public Entity {
 public:
+    Player(int x, int y, int grid_x, int grid_y, int (*board)[BOARD_WIDTH]);
     int (*board)[BOARD_WIDTH];
     void tick();
     void handleInput();

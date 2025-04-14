@@ -8,6 +8,7 @@
 class Ghost: public Entity 
 {
 public:
+    Ghost(Player* player, int(*board)[BOARD_WIDTH]);
     int (*board)[BOARD_WIDTH];
     Player* player;
     std::vector<std::vector<int>> board_graph;

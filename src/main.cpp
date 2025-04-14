@@ -30,18 +30,10 @@ int main()
 
   SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
 
-  Player player;
-  player.x = 0;
-  player.y = 0;
-  player.grid_x = 2;
-  player.grid_y = 2;
-  player.board = game.board;
-
+  Player player(27, 27, 2, 2, game.board);
   game.player = &player;
 
-  Ghost ghost;
-  ghost.player = &player;
-  ghost.board = game.board;
+  Ghost ghost(&player, game.board);
   game.entities.push_back(&ghost);
 
   bool is_running = true;
