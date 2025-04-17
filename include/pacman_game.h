@@ -1,9 +1,7 @@
 #pragma once
 #include <vector>
 #include "include/entity.h"
-
-#define BOARD_HEIGHT 28
-#define BOARD_WIDTH 36
+#include "include/defines.h"
 
 class PacmanGame {
 public:
@@ -39,7 +37,7 @@ public:
     };
     std::vector<Entity*> entities;
     Entity* player;
-    SDL_FRect tile = {0, 0, 800 / BOARD_WIDTH, 600 / BOARD_HEIGHT};
+    SDL_FRect tile = {BOARD_CENTER_OFFSET_X, BOARD_CENTER_OFFSET_Y, TILE_WIDTH, TILE_HEIGHT};
 
     void tick();
     void render(SDL_Renderer* renderer);

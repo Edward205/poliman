@@ -40,8 +40,8 @@ void Player::tick()
 {
     // logic for smooth movment
     // set the desired position to the middle of the cell which the player should be in
-    desired_x = grid_x * (800 / BOARD_WIDTH) - (sprite.w / 2 + ((800 / BOARD_WIDTH) / 2));
-    desired_y = grid_y * (600 / BOARD_HEIGHT) - (sprite.h / 2 + ((600 / BOARD_HEIGHT) / 2));
+    desired_x = BOARD_CENTER_OFFSET_X + grid_x * (TILE_WIDTH) - (sprite.w / 2 + ((TILE_WIDTH) / 2));
+    desired_y = BOARD_CENTER_OFFSET_Y + grid_y * (TILE_HEIGHT) - (sprite.h / 2 + ((TILE_HEIGHT) / 2));
 
     // if the player's position is in range of the desired position, set it exactly to the desired position
     if (x > desired_x - desired_speed && x < desired_x + desired_speed)

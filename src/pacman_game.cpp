@@ -21,10 +21,11 @@ void PacmanGame::render(SDL_Renderer* renderer)
         {
             if(board[i][j] == 1)
             {
+                SDL_FRect tile_c = tile;
                 SDL_SetRenderDrawColor(renderer, 0, 100, 255, 255);
-                tile.x = (tile.w) * j;
-                tile.y = (tile.h) * i;
-                SDL_RenderRect(renderer, &tile);
+                tile_c.x = tile.x + (tile.w) * j;
+                tile_c.y = tile.y + (tile.h) * i;
+                SDL_RenderRect(renderer, &tile_c);
             }
         }
     }

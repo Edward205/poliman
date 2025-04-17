@@ -6,21 +6,19 @@
 #include "include/ghost.h"
 #include "include/pacman_game.h"
 #include "include/player.h"
+#include "include/defines.h"
 
 PacmanGame game;
 
 int main()
 {
-  const int window_width = 800;
-  const int window_height = 600;
-
   if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO))
   {
     std::cerr << "SDL_Init failed: " << SDL_GetError() << std::endl;
     return EXIT_FAILURE;
   }
 
-  SDL_Window *window = SDL_CreateWindow("Pacman", window_width, window_height, 0);
+  SDL_Window *window = SDL_CreateWindow("Pacman", WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 
   if (!window)
   {

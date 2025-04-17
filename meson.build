@@ -14,7 +14,6 @@ cpp = meson.get_compiler('cpp')
 
 sdl_opts = cmake.subproject_options()
 sdl_opts.add_cmake_defines({
-    # --- General Options ---
     'CMAKE_POSITION_INDEPENDENT_CODE': 'ON',
     # 'CMAKE_BUILD_TYPE': buildtype,
     'SDL_TESTS': 'OFF',
@@ -58,6 +57,7 @@ sdl3_dep = sdl3_proj.dependency('SDL3-static')
 pacman_source_files = [
 	'src/sdl_uclibc_stub.c',
 
+    'include/defines.h',
     'include/pacman_game.h',
     'include/entity.h',
     'include/player.h',
