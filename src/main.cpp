@@ -34,6 +34,8 @@ int main()
   game.player = &player;
 
   Ghost ghost(&player, game.board);
+  ghost.grid_x = 2;
+  ghost.grid_y = 2;
   game.entities.push_back(&ghost);
 
   bool is_running = true;

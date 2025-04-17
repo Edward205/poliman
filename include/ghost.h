@@ -10,10 +10,14 @@ class Ghost: public Entity
 public:
     Ghost(Player* player, int(*board)[BOARD_WIDTH]);
     int (*board)[BOARD_WIDTH];
+    int desired_speed = 3;
+    int desired_x = 0;
+    int desired_y = 0;
     Player* player;
     std::vector<std::vector<int>> board_graph;
     void tick();
     void render(SDL_Renderer *renderer);
+    int bfs(const std::vector<std::vector<int>>& graph, int start, int target);
 private:
     int xyToIndex(int x, int y);
 };
