@@ -3,8 +3,8 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
-#define BOARD_HEIGHT 28
-#define BOARD_WIDTH 36
+#define BOARD_HEIGHT 31
+#define BOARD_WIDTH 28
 
 #define TILE_HEIGHT 16
 #define TILE_WIDTH 16
