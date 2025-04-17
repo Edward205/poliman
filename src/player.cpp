@@ -119,7 +119,7 @@ bool Player::isValidDirection(int direction)
     // do not change this. trust me, it works
     
     // check if ahead of the player is the board limit
-    if(grid_x + 1 >= BOARD_WIDTH || grid_x - 1 <= 0 || grid_y + 1 >= BOARD_HEIGHT || grid_x - 1 <= 0) 
+    if(grid_x >= BOARD_WIDTH || grid_x - 1 <= 0 || grid_y >= BOARD_HEIGHT || grid_y - 1 <= 0) 
       return true; // allow the player to exit the area, in which case the wrap-around logic activates
 
     // check if ahead of the player is a wall
