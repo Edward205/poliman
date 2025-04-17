@@ -3,7 +3,6 @@
 #include "SDL3/SDL_render.h"
 #include "include/entity.h"
 #include "include/player.h"
-#include "include/pacman_game.h"
 #include <vector>
 class Ghost: public Entity 
 {

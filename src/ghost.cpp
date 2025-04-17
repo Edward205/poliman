@@ -1,8 +1,5 @@
 #include "include/ghost.h"
 #include "SDL3/SDL_render.h"
-#include "include/pacman_game.h"
-#include <stdio.h>
-#include <stack>
 #include <queue>
 
 Ghost::Ghost(Player *player, int (*board)[BOARD_WIDTH])
