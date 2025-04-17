@@ -1,4 +1,5 @@
 #include "SDL3/SDL_render.h"
+#include "include/defines.h"
 #include "include/player.h"
 
 Player::Player(int x, int y, int grid_x, int grid_y, int (*board)[BOARD_WIDTH])
@@ -70,31 +71,30 @@ void Player::tick()
         y -= desired_speed;
     }
     
-
     // wrap-around logic
     if (grid_x > BOARD_WIDTH)
     {
-      grid_x = 0;
-      desired_x = 0;
-      x = 0;
+      grid_x = 1;
+      desired_x = BOARD_CENTER_OFFSET_X + grid_x * (TILE_WIDTH) - (sprite.w / 2 + ((TILE_WIDTH) / 2));;
+      x = desired_x;
     }
-    if (grid_x < 0)
+    if (grid_x <= 0)
     {
       grid_x = BOARD_WIDTH;
-      desired_x = 800;
-      x = 800;
+      desired_x = BOARD_CENTER_OFFSET_X + grid_x * (TILE_WIDTH) - (sprite.w / 2 + ((TILE_WIDTH) / 2));;
+      x = desired_x;
     }
     if (grid_y > BOARD_HEIGHT)
     {
       grid_y = 0;
-      desired_y = 0;
-      y = 0;
+      desired_y = BOARD_CENTER_OFFSET_Y + grid_y * (TILE_HEIGHT) - (sprite.h / 2 + ((TILE_HEIGHT) / 2));
+      y = desired_y;
     }
-    if (grid_y < 0)
+    if (grid_y <= 0)
     {
       grid_y = BOARD_HEIGHT;
-      desired_y = 600;
-      y = 600;
+      desired_y = BOARD_CENTER_OFFSET_Y + grid_y * (TILE_HEIGHT) - (sprite.h / 2 + ((TILE_HEIGHT) / 2));
+      y = desired_y;
     }
 }
 
@@ -116,13 +116,26 @@ Player::~Player()
 
 bool Player::isValidDirection(int direction)
 {
+    // do not change this. trust me, it works
+    
+    // check if ahead of the player is the board limit
+    if(grid_x + 1 >= BOARD_WIDTH || grid_x - 1 <= 0 || grid_y + 1 >= BOARD_HEIGHT || grid_x - 1 <= 0) 
+      return true; // allow the player to exit the area, in which case the wrap-around logic activates
+
     // check if ahead of the player is a wall
+    // up
     if(direction == 0 && board[grid_y - 2][grid_x - 1] == 1)
       return false;
+
+    // right
     if(direction == 1 && board[grid_y - 1][grid_x] == 1)
       return false;
+
+    // down
     if(direction == 2 && board[grid_y][grid_x - 1] == 1)
       return false;
+
+    // left
     if(direction == 3 && board[grid_y - 1][grid_x - 2] == 1)
       return false;
     return true;
