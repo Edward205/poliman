@@ -32,11 +32,17 @@ int main()
   game.player = &player;
 
   Ghost ghost(&player, game.board);
-  ghost.grid_x = 2;
-  ghost.grid_y = 2;
+  ghost.grid_x = 12;
+  ghost.grid_y = 14;
   game.entities.push_back(&ghost);
 
   bool is_running = true;
+
+  Uint64 performanceFrequency = SDL_GetPerformanceFrequency();
+  Uint64 targetTicksPerFrame = performanceFrequency / SCREEN_FPS;
+
+  Uint64 lastCounter = SDL_GetPerformanceCounter();
+
   while (is_running)
   {
     // handle input events
@@ -68,8 +74,18 @@ int main()
     // display the frame (flip buffer)
     SDL_RenderPresent(renderer);
 
-    // shoddy way to cap the FPS, should work fine for now
-    SDL_Delay(20);
+    // delay the next frame to cap FPS
+    Uint64 currentCounter = SDL_GetPerformanceCounter();
+    Uint64 elapsedTicks = currentCounter - lastCounter;
+
+    if (elapsedTicks < targetTicksPerFrame) 
+    {
+        Uint64 remainingTicks = targetTicksPerFrame - elapsedTicks;
+        Uint32 delayMs = (remainingTicks * 1000) / performanceFrequency;
+        SDL_Delay(delayMs);
+    }
+
+    lastCounter = SDL_GetPerformanceCounter(); 
   }
 
   SDL_DestroyWindow(window);
