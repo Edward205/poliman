@@ -96,6 +96,12 @@ void Player::tick()
       desired_y = BOARD_CENTER_OFFSET_Y + grid_y * (TILE_HEIGHT) - (sprite.h / 2 + ((TILE_HEIGHT) / 2));
       y = desired_y;
     }
+
+    // eat points
+    if(x == desired_x && y == desired_y && board[grid_y - 1][grid_x - 1] == 2)
+    {
+      board[grid_y - 1][grid_x - 1] = 0;
+    }
 }
 
 void Player::render(SDL_Renderer *renderer)
