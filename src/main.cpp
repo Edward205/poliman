@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <vector>
 
 #include "SDL3/SDL_timer.h"
 #include "SDL3/SDL_init.h"
@@ -9,6 +11,7 @@
 #include "include/defines.h"
 
 PacmanGame game;
+Player player;
 
 int main()
 {
@@ -27,8 +30,11 @@ int main()
   }
 
   SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
+  bool is_running = true;
 
-  Player player(27, 27, 2, 2, game.board);
+
+
+  player = Player(27, 27, 2, 2, game.board);
   game.player = &player;
 
   Ghost ghost(&player, game.board);
@@ -36,7 +42,6 @@ int main()
   ghost.grid_y = 14;
   game.entities.push_back(&ghost);
 
-  bool is_running = true;
 
   Uint64 performanceFrequency = SDL_GetPerformanceFrequency();
   Uint64 targetTicksPerFrame = performanceFrequency / SCREEN_FPS;

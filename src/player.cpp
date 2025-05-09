@@ -10,6 +10,14 @@ Player::Player(int x, int y, int grid_x, int grid_y, int (*board)[BOARD_WIDTH])
   this->grid_y = grid_y;
   this->board = board;
 }
+Player::Player()
+{
+  this->x = 0;
+  this->y = 0;
+  this->grid_x = 0;
+  this->grid_y = 0;
+  this->board = nullptr;
+}
 
 void Player::handleInput()
 {
