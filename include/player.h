@@ -6,9 +6,9 @@
 
 class Player: public Entity {
 public:
-    Player(int x, int y, int grid_x, int grid_y, int (*board)[BOARD_WIDTH]);
+    Player(int x, int y, int grid_x, int grid_y, int (*)[BOARD_HEIGHT][BOARD_WIDTH]);
     Player();
-    int (*board)[BOARD_WIDTH];
+    int (*board)[BOARD_HEIGHT][BOARD_WIDTH];
     void tick();
     void handleInput();
     void render(SDL_Renderer *renderer);

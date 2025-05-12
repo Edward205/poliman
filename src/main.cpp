@@ -11,7 +11,55 @@
 #include "include/defines.h"
 
 PacmanGame game;
-Player player;
+
+bool load_level(std::string file, PacmanGame* game)
+{
+  std::cout << "Loading level " << file << std::endl;
+  std::ifstream l("../levels/" + file);
+  if(!l.is_open())
+    return false;
+
+  game->entities.clear();
+
+  // load board
+  for(int i = 0; i < BOARD_HEIGHT; ++i)
+  {
+    for(int j = 0; j < BOARD_WIDTH; ++j)
+    {
+      int aux;
+      l >> aux;
+      game->board[i][j] = aux;
+    }
+  }
+
+  // load player first
+  for(int i = 0; i < BOARD_HEIGHT; ++i)
+  {
+    for(int j = 0; j < BOARD_WIDTH; ++j)
+    {
+      if (game->board[i][j] == 4)
+      {
+        game->player = new Player(BOARD_CENTER_OFFSET_X + (j + 1) * TILE_WIDTH, BOARD_CENTER_OFFSET_Y + (i + 1) * TILE_HEIGHT, j + 1, i + 1, &game->board);
+        break;
+      }
+    }
+  }
+
+  // lastly, load entities (ghosts)
+  for(int i = 0; i < BOARD_HEIGHT; ++i)
+  {
+    for(int j = 0; j < BOARD_WIDTH; ++j)
+    {
+      if (game->board[i][j] == 5)
+      {
+        game->entities.push_back(new Ghost(BOARD_CENTER_OFFSET_X + (j + 1) * TILE_WIDTH, BOARD_CENTER_OFFSET_Y + (i + 1) * TILE_HEIGHT, j + 1, i + 1, game->player, &game->board));
+        break;
+      }
+    }
+  }
+  
+  return true;
+}
 
 int main()
 {
@@ -32,16 +80,27 @@ int main()
   SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
   bool is_running = true;
 
+  // read list
+  std::cout << "Loading levels list..." << std::endl;
+  std::ifstream l("../levels/list");
+  if(!l.is_open())
+  {
+    std::cerr << "Failed to load level list" << std::endl;
+    return 1;
+  }
+  std::string level_file;
+  std::vector<std::string> level_files;
+  while (std::getline(l, level_file)) {
+    level_files.push_back(level_file);
+    std::cout << level_file << std::endl;
+  }
 
-
-  player = Player(27, 27, 2, 2, game.board);
-  game.player = &player;
-
-  Ghost ghost(&player, game.board);
-  ghost.grid_x = 12;
-  ghost.grid_y = 14;
-  game.entities.push_back(&ghost);
-
+  
+  if(!load_level(level_files[0], &game))
+  {
+    std::cerr << "Failed to load level " << level_files[0] << std::endl;
+    return 1;
+  }
 
   Uint64 performanceFrequency = SDL_GetPerformanceFrequency();
   Uint64 targetTicksPerFrame = performanceFrequency / SCREEN_FPS;
@@ -70,9 +129,10 @@ int main()
     // clear the screen to prepare for the next frame
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
+    
+    game.player->handleInput();
 
     // game code
-    player.handleInput();
     game.tick();
     game.render(renderer);
 

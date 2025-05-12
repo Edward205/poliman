@@ -2,8 +2,18 @@
 #include "SDL3/SDL_render.h"
 #include <queue>
 
-Ghost::Ghost(Player *player, int (*board)[BOARD_WIDTH])
+Ghost::Ghost(Player *player, int (*board)[BOARD_HEIGHT][BOARD_WIDTH])
 {
+  this->player = player;
+  this->board = board;
+}
+
+Ghost::Ghost(int x, int y, int grid_x, int grid_y, Player *player, int (*board)[BOARD_HEIGHT][BOARD_WIDTH])
+{
+  this->x = x;
+  this->y = y;
+  this->grid_x = grid_x;
+  this->grid_y = grid_y;
   this->player = player;
   this->board = board;
 }
@@ -51,23 +61,23 @@ void Ghost::tick()
         int currentIndex = xyToIndex(i, j);
 
         // skip cell if it's a wall
-        if (board[j][i] == 1)
+        if ((*board)[j][i] == 1)
           continue;
 
         // up
-        if (j > 0 && board[j - 1][i] != 1)
+        if (j > 0 && (*board)[j - 1][i] != 1)
           board_graph[currentIndex].push_back(xyToIndex(i, j - 1));
 
         // down
-        if (j < BOARD_HEIGHT - 1 && board[j + 1][i] != 1)
+        if (j < BOARD_HEIGHT - 1 && (*board)[j + 1][i] != 1)
           board_graph[currentIndex].push_back(xyToIndex(i, j + 1));
 
         // left
-        if (i > 0 && board[j][i - 1] != 1)
+        if (i > 0 && (*board)[j][i - 1] != 1)
           board_graph[currentIndex].push_back(xyToIndex(i - 1, j));
 
         // right
-        if (i < BOARD_WIDTH - 1 && board[j][i + 1] != 1)
+        if (i < BOARD_WIDTH - 1 && (*board)[j][i + 1] != 1)
           board_graph[currentIndex].push_back(xyToIndex(i + 1, j));
       }
     }
