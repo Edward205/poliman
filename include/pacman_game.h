@@ -2,6 +2,10 @@
 #include <vector>
 #include "include/entity.h"
 #include "include/defines.h"
+#include "include/player.h"
+#include "include/ghost.h"
+#include "include/ghost_type.h"
+#include "SDL3/SDL_render.h"
 
 class PacmanGame {
 public:
@@ -20,10 +24,10 @@ public:
         {0, 0, 0, 0, 0, 1, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 1, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 1, 2, 1, 1, 2, 1, 1, 1, 0, 0, 1, 1, 1, 2, 1, 1, 2, 1, 0, 0, 0, 0, 0},
         {1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1},
-        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 0, 4, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
         {1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1},
         {0, 0, 0, 0, 0, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 1, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 1, 2, 1, 1, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 1, 1, 2, 1, 0, 0, 0, 0, 0},
         {0, 0, 0, 0, 0, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 0, 0, 0, 0, 0},
         {1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1},
         {1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1},
@@ -39,11 +43,13 @@ public:
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
     };
     std::vector<Entity*> entities;
-    Entity* player;
+    Player* player;
     SDL_FRect tile = {BOARD_CENTER_OFFSET_X, BOARD_CENTER_OFFSET_Y, TILE_WIDTH, TILE_HEIGHT};
 
-    void tick();
-    void render(SDL_Renderer* renderer);
-
+    PacmanGame();
     ~PacmanGame();
+
+    void initializeEntities();
+    void tick();
+    void render(SDL_Renderer*);
 };

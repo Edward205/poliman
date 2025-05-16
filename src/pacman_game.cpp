@@ -1,4 +1,50 @@
 #include "include/pacman_game.h"
+#include "include/ghost.h"
+#include "include/ghost_type.h"
+#include "include/player.h"
+#include "include/defines.h"
+#include <iostream>
+
+PacmanGame::~PacmanGame()
+{
+    for(Entity* e : entities)
+        delete e;
+    entities.clear();
+}
+
+void PacmanGame::initializeEntities() {
+    int ghostCount = 0;
+
+    for (int y = 0; y < BOARD_HEIGHT; ++y) {
+        for (int x = 0; x < BOARD_WIDTH; ++x) {
+            int cell = board[y][x];
+
+            if (cell == 3) {  // player spawn point
+                player = new Player(x * TILE_SIZE, y * TILE_SIZE, x, y ,board);
+                player->grid_x = x;
+                player->grid_y = y;
+                player->updatePixelPosition(TILE_SIZE);
+                entities.push_back(player);
+            }
+            else if (cell == 4) {  // ghost spawn point
+                GhostType type;
+                switch (ghostCount) {
+                    case 0: type = GhostType::BLINKY; break;
+                    case 1: type = GhostType::PINKY; break;
+                    case 2: type = GhostType::INKY; break;
+                    default: type = GhostType::CLYDE; break;
+                }
+                ++ghostCount;
+
+                Ghost* ghost = new Ghost(static_cast<Player*>(player), board, type);
+                ghost->grid_x = x;
+                ghost->grid_y = y;
+                ghost->updatePixelPosition(TILE_SIZE);
+                entities.push_back(ghost);
+            }
+        }
+    }
+}
 
 void PacmanGame::tick()
 {
@@ -48,8 +94,7 @@ void PacmanGame::render(SDL_Renderer* renderer)
     }
 }
 
-PacmanGame::~PacmanGame()
+PacmanGame::PacmanGame()
 {
-    // destructor
-    // free entities/players spirtes ...
+    initializeEntities();
 }

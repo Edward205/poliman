@@ -14,6 +14,10 @@ public:
     virtual ~Entity() = default;
     virtual void tick() = 0;
     virtual void render(SDL_Renderer *renderer) = 0;
+    void updatePixelPosition(int tileSize){
+        x = grid_x * tileSize;
+        y = grid_y * tileSize;
+    }
 private:
 
 };
