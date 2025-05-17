@@ -5,6 +5,7 @@
 #include "SDL3/SDL_timer.h"
 #include "SDL3/SDL_init.h"
 
+#include "include/font_renderer.h"
 #include "include/ghost.h"
 #include "include/pacman_game.h"
 #include "include/player.h"
@@ -63,6 +64,7 @@ bool load_level(std::string file, PacmanGame* game)
 
 int main()
 {
+  // initialise SDL
   if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO))
   {
     std::cerr << "SDL_Init failed: " << SDL_GetError() << std::endl;
@@ -80,7 +82,7 @@ int main()
   SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
   bool is_running = true;
 
-  // read list
+  // read levels list
   std::cout << "Loading levels list..." << std::endl;
   std::ifstream l("../levels/list");
   if(!l.is_open())
@@ -94,14 +96,23 @@ int main()
     level_files.push_back(level_file);
     std::cout << level_file << std::endl;
   }
-
   
+  // load the first level
   if(!load_level(level_files[0], &game))
   {
     std::cerr << "Failed to load level " << level_files[0] << std::endl;
     return 1;
   }
 
+  // load a font
+  std::cout << "Loading font..." << std::endl;
+  FontRenderer fontRenderer(renderer, "../res/monogram.bmp");
+  fontRenderer.x = 10;
+  fontRenderer.y = 10;
+  fontRenderer.scale = 3;
+  fontRenderer.text = "asd";
+
+  // FPS cap counter
   Uint64 performanceFrequency = SDL_GetPerformanceFrequency();
   Uint64 targetTicksPerFrame = performanceFrequency / SCREEN_FPS;
 
@@ -135,6 +146,8 @@ int main()
     // game code
     game.tick();
     game.render(renderer);
+
+    fontRenderer.render(renderer);
 
     // display the frame (flip buffer)
     SDL_RenderPresent(renderer);

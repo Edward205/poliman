@@ -63,6 +63,7 @@ pacman_source_files = [
     'include/player.h',
     'include/ghost.h',
     'include/ui.h',
+    'include/font_renderer.h',
 
     'src/main.cpp',
     'src/pacman_game.cpp',
@@ -70,6 +71,7 @@ pacman_source_files = [
     'src/player.cpp',
     'src/ghost.cpp',
     'src/ui.cpp',
+    'src/font_renderer.cpp',
 ]
 
 pacman_dependencies = [
