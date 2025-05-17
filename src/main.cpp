@@ -106,11 +106,8 @@ int main()
 
   // load a font
   std::cout << "Loading font..." << std::endl;
-  FontRenderer fontRenderer(renderer, "../res/monogram.bmp");
-  fontRenderer.x = 10;
-  fontRenderer.y = 10;
-  fontRenderer.scale = 3;
-  fontRenderer.text = "asd";
+  FontRenderer fontRenderer(renderer, "../res/monogram.bmp", 10, 10, 3);
+  fontRenderer.text = "00000";
 
   // FPS cap counter
   Uint64 performanceFrequency = SDL_GetPerformanceFrequency();

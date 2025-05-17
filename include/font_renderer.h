@@ -7,7 +7,7 @@
 
 class FontRenderer {
 public:
-    FontRenderer(SDL_Renderer *renderer, const char *path);
+    FontRenderer(SDL_Renderer *renderer, const char *path, int x, int y, int scale);
     std::string text;
     float x, y;
     float scale;
