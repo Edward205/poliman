@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <vector>
 
 #include "SDL3/SDL_timer.h"
@@ -144,6 +145,10 @@ int main()
     game.tick();
     game.render(renderer);
 
+    // update the points counter on screen
+    std::string aux = std::to_string(game.player->points);
+    aux.insert(0, 6 - aux.length(), '0');
+    fontRenderer.text = aux;
     fontRenderer.render(renderer);
 
     // display the frame (flip buffer)

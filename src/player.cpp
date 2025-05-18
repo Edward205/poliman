@@ -84,14 +84,12 @@ void Player::tick()
   {
     grid_x = 1;
     desired_x = BOARD_CENTER_OFFSET_X + grid_x * (TILE_WIDTH) - (sprite.w / 2 + ((TILE_WIDTH) / 2));
-    ;
     x = desired_x;
   }
   if (grid_x <= 0)
   {
     grid_x = BOARD_WIDTH;
     desired_x = BOARD_CENTER_OFFSET_X + grid_x * (TILE_WIDTH) - (sprite.w / 2 + ((TILE_WIDTH) / 2));
-    ;
     x = desired_x;
   }
   if (grid_y > BOARD_HEIGHT)
@@ -111,6 +109,7 @@ void Player::tick()
   if (x == desired_x && y == desired_y && (*board)[grid_y - 1][grid_x - 1] == 2)
   {
     (*board)[grid_y - 1][grid_x - 1] = 0;
+    ++points;
   }
 }
 

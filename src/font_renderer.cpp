@@ -1,6 +1,5 @@
 #include <iostream>
 #include "include/font_renderer.h"
-#include "SDL3/SDL_events.h"
 #include "SDL3/SDL_rect.h"
 #include "SDL3/SDL_surface.h"
 
