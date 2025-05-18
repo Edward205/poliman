@@ -13,6 +13,7 @@
 #include "include/defines.h"
 
 PacmanGame game;
+Quiz quiz;
 
 bool load_level(std::string file, PacmanGame* game)
 {
@@ -60,7 +61,7 @@ bool load_level(std::string file, PacmanGame* game)
     }
   }
   
-  return true;
+    return true;
 }
 
 int main()
@@ -72,7 +73,7 @@ int main()
     return EXIT_FAILURE;
   }
 
-  SDL_Window *window = SDL_CreateWindow("Pacman", WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+  SDL_Window *window = SDL_CreateWindow("Poliman", WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 
   if (!window)
   {
@@ -81,6 +82,7 @@ int main()
   }
 
   SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
+  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
   bool is_running = true;
 
   // read levels list
@@ -107,8 +109,12 @@ int main()
 
   // load a font
   std::cout << "Loading font..." << std::endl;
-  FontRenderer fontRenderer(renderer, "../res/monogram.bmp", 10, 10, 3);
-  fontRenderer.text = "00000";
+  FontRenderer scoreDisplay(renderer, "../res/monogram.bmp", 10, 10, 3, 7);
+  scoreDisplay.text = "00000";
+
+  // initialise quiz
+  quiz.init(renderer);
+  game.quiz = &quiz;
 
   // FPS cap counter
   Uint64 performanceFrequency = SDL_GetPerformanceFrequency();
@@ -148,8 +154,8 @@ int main()
     // update the points counter on screen
     std::string aux = std::to_string(game.player->points);
     aux.insert(0, 6 - aux.length(), '0');
-    fontRenderer.text = aux;
-    fontRenderer.render(renderer);
+    scoreDisplay.text = aux;
+    scoreDisplay.render(renderer);
 
     // display the frame (flip buffer)
     SDL_RenderPresent(renderer);

@@ -62,7 +62,7 @@ pacman_source_files = [
     'include/entity.h',
     'include/player.h',
     'include/ghost.h',
-    'include/ui.h',
+    'include/quiz.h',
     'include/font_renderer.h',
 
     'src/main.cpp',
@@ -70,7 +70,7 @@ pacman_source_files = [
     'src/entity.cpp',
     'src/player.cpp',
     'src/ghost.cpp',
-    'src/ui.cpp',
+    'src/quiz.cpp',
     'src/font_renderer.cpp',
 ]
 

@@ -2,13 +2,30 @@
 
 void PacmanGame::tick()
 {
-    // tick the player first
-    player->tick();
-
-    // tick all entities in the game
-    for(auto entity : entities)
+    // check player collisions
+    if(!paused)
     {
-        entity->tick();
+        for(auto entity : entities)
+        {
+            if(player->grid_x == entity->grid_x && player->grid_y == entity->grid_y)
+            {
+                paused = true;
+                quiz->triggerQuiz();
+                break;
+            }
+        }
+    }
+
+    if(!paused || !quiz->active)
+    {
+        // tick the player first
+        player->tick();
+    
+        // tick all entities in the game
+        for(auto entity : entities)
+        {
+            entity->tick();
+        }
     }
 }
 
@@ -46,6 +63,9 @@ void PacmanGame::render(SDL_Renderer* renderer)
     {
         entity->render(renderer);
     }
+
+    // render quiz
+    quiz->render(renderer);
 }
 
 PacmanGame::~PacmanGame()
