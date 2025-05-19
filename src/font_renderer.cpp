@@ -33,18 +33,13 @@ void FontRenderer::render(SDL_Renderer *renderer)
 {
     for(unsigned int i = 0; i < text.size(); ++i)
     {
-        int aux = text[i] - 32;
-        // very exact variables made specifically for the monogram bitmap font
-        // TODO to be generalised later
-        SDL_FRect srcrect({(float) 1 + (5 * (aux % 16)) + (aux % 16), (float) (12 * (aux / 16)) + 2, 5, 9});
-        SDL_FRect destrect({x + i * 5 * scale + (i * 2), y + ((i + 1) / max_chars) * 16, 5.0f * scale, 9.0f * scale});
+        int aux = text[i] - 32; 
 
-        // FIXME this is not optimal
-        destrect.x = destrect.x - (destrect.w * max_chars * ((i + 1) / max_chars)) - (((i + 1) / max_chars) * 59 * scale);
-        
+        SDL_FRect srcrect({1.0f + (float)(aux % 16) * 6.0f, 2.0f + (float)(aux / 16) * 12.0f, 5.0f, 9.0f});
+        SDL_FRect destrect({x + (i % max_chars) * (5.0f * scale + 2.0f), y + (i / max_chars) * (8.0f * scale), 5.0f * scale,9.0f * scale});
+
         SDL_RenderTexture(renderer, font_texture, &srcrect, &destrect);
-    }
-}
+    }}
 
 FontRenderer::~FontRenderer()
 {
