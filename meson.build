@@ -64,6 +64,7 @@ pacman_source_files = [
     'include/ghost.h',
     'include/quiz.h',
     'include/font_renderer.h',
+    'include/button.h',
 
     'src/main.cpp',
     'src/pacman_game.cpp',
@@ -72,6 +73,7 @@ pacman_source_files = [
     'src/ghost.cpp',
     'src/quiz.cpp',
     'src/font_renderer.cpp',
+    'src/button.cpp',
 ]
 
 pacman_dependencies = [

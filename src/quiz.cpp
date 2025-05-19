@@ -1,4 +1,3 @@
-#include <iostream>
 #include <random>
 #include <string>
 
@@ -59,4 +58,8 @@ void Quiz::triggerQuiz() {
 Quiz::~Quiz()
 {
     delete question;
+    delete answer1;
+    delete answer2;
+    delete answer3;
+    delete answer4;
 }
