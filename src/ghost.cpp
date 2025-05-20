@@ -15,7 +15,7 @@ Ghost::Ghost(int x, int y, int grid_x, int grid_y, Player *player, int (*board)[
   this->grid_x = grid_x;
   this->grid_y = grid_y;
   this->init_grid_x = grid_x;
-  this->init_grid_y = grid_x;
+  this->init_grid_y = grid_y;
   this->player = player;
   this->board = board;
 }

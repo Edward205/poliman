@@ -6,7 +6,6 @@
 #include "SDL3/SDL_timer.h"
 #include "SDL3/SDL_init.h"
 
-#include "include/button.h"
 #include "include/font_renderer.h"
 #include "include/ghost.h"
 #include "include/pacman_game.h"
@@ -57,7 +56,6 @@ bool load_level(std::string file, PacmanGame* game)
       if (game->board[i][j] == 5)
       {
         game->entities.push_back(new Ghost(BOARD_CENTER_OFFSET_X + (j + 1) * TILE_WIDTH, BOARD_CENTER_OFFSET_Y + (i + 1) * TILE_HEIGHT, j + 1, i + 1, game->player, &game->board));
-        break;
       }
     }
   }
@@ -108,10 +106,12 @@ int main()
     return 1;
   }
 
-  // load a font
-  std::cout << "Loading font..." << std::endl;
+  // load score display
   FontRenderer scoreDisplay(renderer, "../res/monogram.bmp", 10, 10, 3, 7);
   scoreDisplay.text = "00000";
+
+  FontRenderer livesDisplay(renderer, "../res/monogram.bmp", 10, 50, 3, 7);
+  scoreDisplay.text = std::to_string(game.lives);
 
   // initialise quiz
   quiz.init(renderer);
@@ -159,6 +159,9 @@ int main()
     aux.insert(0, 6 - aux.length(), '0');
     scoreDisplay.text = aux;
     scoreDisplay.render(renderer);
+
+    livesDisplay.text = std::to_string(game.lives);
+    livesDisplay.render(renderer);
 
     // display the frame (flip buffer)
     SDL_RenderPresent(renderer);
