@@ -35,6 +35,11 @@ void PacmanGame::tick()
         quiz->state = 0;
         quiz->active = false;
         paused = false;
+        for(auto entity : entities)
+        {
+            entity->grid_x = entity->init_grid_x;
+            entity->grid_y = entity->init_grid_y;
+        }
     }
     if(quiz->state == 2)
     {
@@ -42,6 +47,11 @@ void PacmanGame::tick()
         quiz->state = 0;
         quiz->active = false;
         paused = false;
+        for(auto entity : entities)
+        {
+            entity->grid_x = entity->init_grid_x;
+            entity->grid_y = entity->init_grid_y;
+        }
     }
 }
 

@@ -34,7 +34,7 @@ void Quiz::render(SDL_Renderer* renderer) {
         SDL_FRect background = {0, 0, WINDOW_WIDTH, WINDOW_WIDTH};
         SDL_RenderFillRect(renderer, &background);
         
-        background = SDL_FRect({question->x-5, question->y-5, 646+10, 30+10});
+        background = SDL_FRect({question->x-5, question->y-5, 656+10, 48+10});
         SDL_SetRenderDrawColor(renderer, 75, 75, 100, 255);
         SDL_RenderFillRect(renderer, &background);
 

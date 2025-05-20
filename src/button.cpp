@@ -52,6 +52,7 @@ void Button::handleInput(SDL_Event e)
 }
 void Button::render(SDL_Renderer *renderer)
 {
+    fontRenderer->text = text;
     SDL_FRect background = SDL_FRect({(float) x-5, (float) y-5, (float) w+10, (float) h+10});
     
     if(hovering)
