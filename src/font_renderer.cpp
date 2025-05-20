@@ -24,7 +24,7 @@ bool FontRenderer::loadFont(SDL_Renderer *renderer, const char* path)
     if(!font_texture)
         return false;
 
-    SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_PIXELART);
+    SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
     font_texture = texture;
     return true;
 }
