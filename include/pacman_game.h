@@ -8,6 +8,7 @@
 class PacmanGame {
 public:
     int board[BOARD_HEIGHT][BOARD_WIDTH];
+    int lives = 3;
     std::vector<Entity*> entities;
     Player* player;
     SDL_FRect tile = {BOARD_CENTER_OFFSET_X, BOARD_CENTER_OFFSET_Y, TILE_WIDTH, TILE_HEIGHT};

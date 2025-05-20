@@ -6,6 +6,7 @@
 #include "SDL3/SDL_timer.h"
 #include "SDL3/SDL_init.h"
 
+#include "include/button.h"
 #include "include/font_renderer.h"
 #include "include/ghost.h"
 #include "include/pacman_game.h"
@@ -131,6 +132,8 @@ int main()
       if (!is_running)
         break;
 
+      // TODO this is not optimal; create a handleInput method for the PacmanGame class
+      game.quiz->handleInput(event);
       switch (event.type)
       {
       case SDL_EVENT_QUIT: // pressing the close button

@@ -4,23 +4,29 @@
 #include <utility>
 #include <string>
 
+#include "SDL3/SDL_events.h"
 #include "SDL3/SDL_render.h"
+#include "include/button.h"
 #include "include/font_renderer.h"
 
 class Quiz {
 public:
     bool active;
     int questionIndex;
+    int state = 0; // 0 = unanswered; 1 = correct answer; 2 = wrong answer
     void triggerQuiz();
+    void handleInput(SDL_Event e);
     void render(SDL_Renderer* renderer);
     void init(SDL_Renderer* renderer);
     ~Quiz();
 private:
+// TODO THIS IS REALLY BAD
     FontRenderer* question;
-    FontRenderer* answer1;
-    FontRenderer* answer2;
-    FontRenderer* answer3;
-    FontRenderer* answer4;
+    Button* answer1;
+    Button* answer2;
+    Button* answer3;
+    Button* answer4;
+
 
     std::vector<std::pair<std::string, bool>> quizes = {
     {"What is the ability of machines to perform tasks that would normally require human intelligence?", false},

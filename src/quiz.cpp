@@ -10,16 +10,26 @@
 void Quiz::init(SDL_Renderer *renderer)
 {
     question = new FontRenderer(renderer, "../res/monogram.bmp", 90, 180, 2, 53);
-    answer1 = new FontRenderer(renderer, "../res/monogram.bmp", 90, 180+(70*1), 2, 50);
-    answer2 = new FontRenderer(renderer, "../res/monogram.bmp", 90, 180+(70*2), 2, 50);
-    answer3 = new FontRenderer(renderer, "../res/monogram.bmp", 90, 180+(70*3), 2, 50);
-    answer4 = new FontRenderer(renderer, "../res/monogram.bmp", 90, 180+(70*4), 2, 50);
+    answer1 = new Button(renderer, 90, 180+(70*1), 656, 40, 50, "caca");
+    answer2 = new Button(renderer, 90, 180+(70*2), 656, 40, 50, "caca");
+    answer3 = new Button(renderer, 90, 180+(70*3), 656, 40, 50, "caca");
+    answer4 = new Button(renderer, 90, 180+(70*4), 656, 40, 50, "caca");
+}
+
+void Quiz::handleInput(SDL_Event e)
+{
+    if(active)
+    {
+        answer1->handleInput(e);
+        answer2->handleInput(e);
+        answer3->handleInput(e);
+        answer4->handleInput(e);
+    }
 }
 
 void Quiz::render(SDL_Renderer* renderer) {
     if(active)
     {
-        printf("%d\n", questionIndex);
         SDL_SetRenderDrawColor(renderer, 50, 50, 50, 100);
         SDL_FRect background = {0, 0, WINDOW_WIDTH, WINDOW_WIDTH};
         SDL_RenderFillRect(renderer, &background);
@@ -52,6 +62,11 @@ void Quiz::triggerQuiz() {
         answer3->text = std::string(quizes[questionIndex+3].first);
         answer4->text = std::string(quizes[questionIndex+4].first);
 
+        // why can't i set these to a normal function ???
+        answer1->onPressed = ([&] { if(quizes[questionIndex+1].second == true) state = 1; else state = 2; return 0; });
+        answer2->onPressed = ([&] { if(quizes[questionIndex+2].second == true) state = 1; else state = 2; return 0; });
+        answer3->onPressed = ([&] { if(quizes[questionIndex+3].second == true) state = 1; else state = 2; return 0; });
+        answer4->onPressed = ([&] { if(quizes[questionIndex+4].second == true) state = 1; else state = 2; return 0; });
     }
 }
 

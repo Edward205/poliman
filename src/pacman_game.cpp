@@ -27,6 +27,22 @@ void PacmanGame::tick()
             entity->tick();
         }
     }
+
+    // update quiz
+    if(quiz->state == 1)
+    {
+        --lives;
+        quiz->state = 0;
+        quiz->active = false;
+        paused = false;
+    }
+    if(quiz->state == 2)
+    {
+        --lives;
+        quiz->state = 0;
+        quiz->active = false;
+        paused = false;
+    }
 }
 
 void PacmanGame::render(SDL_Renderer* renderer)
