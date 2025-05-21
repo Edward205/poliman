@@ -73,6 +73,18 @@ bool load_level(std::string file, PacmanGame* game)
   {
     entity->loadSprite(renderer, "../res/professor.bmp");
   }
+
+  std::string air_sprite_filename, wall_sprite_filename;
+  std::getline(l, air_sprite_filename); // first getline is blank
+
+  std::getline(l, air_sprite_filename);
+  std::getline(l, wall_sprite_filename);
+
+  // load the level sprites 
+  if(!game->loadSprites(renderer, air_sprite_filename.c_str(), wall_sprite_filename.c_str(), "../res/point.bmp"))
+  {
+    std::cerr << "Failed to load game sprites" << std::endl; 
+  }
   
   return true;
 }

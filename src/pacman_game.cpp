@@ -1,4 +1,5 @@
 #include "include/pacman_game.h"
+#include "SDL3/SDL_render.h"
 
 void PacmanGame::tick()
 {
@@ -63,20 +64,20 @@ void PacmanGame::render(SDL_Renderer* renderer)
         for(int j = 0; j < BOARD_WIDTH; ++j)
         {
             SDL_FRect tile_c = tile;
+
+            tile_c.x = tile.x + (tile.w) * j;
+            tile_c.y = tile.y + (tile.h) * i;
+            SDL_FRect srcrect({(float) 0, (float) 0, 32, 32});
+          
+            SDL_RenderTexture(renderer, air_texture, &srcrect, &tile_c);
+
             if(board[i][j] == 1)
             {
-                SDL_SetRenderDrawColor(renderer, 0, 100, 255, 255);
-                tile_c.x = tile.x + (tile.w) * j;
-                tile_c.y = tile.y + (tile.h) * i;
-                SDL_RenderRect(renderer, &tile_c);
-            } else if(board[i][j] == 2)
+                SDL_RenderTexture(renderer, wall_texture, &srcrect, &tile_c);
+            } 
+            else if(board[i][j] == 2)
             {
-                SDL_SetRenderDrawColor(renderer, 244, 193, 156, 255);
-                tile_c.w = 4;
-                tile_c.h = 4;
-                tile_c.x = tile.x + (j + 1) * (TILE_WIDTH) - (tile_c.w / 2 + ((TILE_WIDTH) / 2));
-                tile_c.y = tile.y + (i + 1) * (TILE_HEIGHT) - (tile_c.h / 2 + ((TILE_HEIGHT) / 2));
-                SDL_RenderFillRect(renderer, &tile_c);
+                SDL_RenderTexture(renderer, point_texture, &srcrect, &tile_c);
             }
         }
     }
@@ -94,8 +95,53 @@ void PacmanGame::render(SDL_Renderer* renderer)
     quiz->render(renderer);
 }
 
+bool PacmanGame::loadSprites(SDL_Renderer *renderer, const char* air_sprite, const char* wall_sprite, const char* point_sprite)
+{
+    surface = SDL_LoadBMP(air_sprite);
+    if(!surface)
+        return false;
+  
+    SDL_Texture* aux_texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_DestroySurface(surface);
+    if(!aux_texture)
+        return false;
+  
+    SDL_SetTextureScaleMode(aux_texture, SDL_SCALEMODE_NEAREST);
+    air_texture = aux_texture;
+
+
+    surface = SDL_LoadBMP(wall_sprite);
+    if(!surface)
+        return false;
+  
+    aux_texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_DestroySurface(surface);
+    if(!aux_texture)
+        return false;
+  
+    SDL_SetTextureScaleMode(aux_texture, SDL_SCALEMODE_NEAREST);
+    wall_texture = aux_texture;
+
+
+    surface = SDL_LoadBMP(point_sprite);
+    if(!surface)
+        return false;
+  
+    aux_texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_DestroySurface(surface);
+    if(!aux_texture)
+        return false;
+  
+    SDL_SetTextureScaleMode(aux_texture, SDL_SCALEMODE_NEAREST);
+    point_texture = aux_texture;
+
+    return true;
+}
+
+
 PacmanGame::~PacmanGame()
 {
-    // destructor
-    // free entities/players spirtes ...
+    SDL_DestroyTexture(air_texture);
+    SDL_DestroyTexture(wall_texture);
+    SDL_DestroyTexture(point_texture);
 }

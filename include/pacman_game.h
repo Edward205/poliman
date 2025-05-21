@@ -18,6 +18,13 @@ public:
 
     void tick();
     void render(SDL_Renderer* renderer);
+    bool loadSprites(SDL_Renderer *renderer, const char* air_sprite, const char* wall_sprite, const char* point_sprite);
 
     ~PacmanGame();
+private:
+    SDL_Surface* surface;
+    
+    SDL_Texture* air_texture;
+    SDL_Texture* wall_texture;
+    SDL_Texture* point_texture;
 };
