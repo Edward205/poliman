@@ -1,7 +1,10 @@
 #include "include/ghost.h"
 #include "SDL3/SDL_render.h"
 #include "SDL3/SDL_surface.h"
+#include "include/defines.h"
 #include <queue>
+#include <stdio.h>
+#include <random>
 
 Ghost::Ghost(Player *player, int (*board)[BOARD_HEIGHT][BOARD_WIDTH])
 {
@@ -9,12 +12,13 @@ Ghost::Ghost(Player *player, int (*board)[BOARD_HEIGHT][BOARD_WIDTH])
   this->board = board;
 }
 
-Ghost::Ghost(int x, int y, int grid_x, int grid_y, Player *player, int (*board)[BOARD_HEIGHT][BOARD_WIDTH])
+Ghost::Ghost(int x, int y, int grid_x, int grid_y, int type, Player *player, int (*board)[BOARD_HEIGHT][BOARD_WIDTH])
 {
   this->x = x;
   this->y = y;
   this->grid_x = grid_x;
   this->grid_y = grid_y;
+  this->type = type;
   this->init_grid_x = grid_x;
   this->init_grid_y = grid_y;
   this->player = player;
@@ -101,7 +105,176 @@ void Ghost::tick()
       }
     }
 
-    int playerIndex = xyToIndex(player->grid_x - 1, player->grid_y - 1);
+    int target_x;
+    int target_y;
+    target_x = player->grid_x - 1;
+    target_y = player->grid_y - 1;
+    
+    // code below is partly AI-generated TODO it's shit
+    switch (type) {
+      case 1:
+        if (player->direction == 0)
+        {
+            for (int i = 1; i <= 5; ++i)
+            {
+                int r_check_0idx = (player->grid_y - 1) - i;
+                if (r_check_0idx > 0)
+                {
+                    if ((*board)[r_check_0idx][player->grid_x - 1] != 1)
+                        --target_y;
+                    else
+                        break;
+                }
+                else
+                    break;
+            }
+        }
+        else if (player->direction == 1)
+        {
+            for (int i = 1; i <= 5; ++i)
+            {
+                int c_check_0idx = (player->grid_x - 1) + i;
+                if (c_check_0idx < (BOARD_WIDTH - 1))
+                {
+                    if ((*board)[player->grid_y - 1][c_check_0idx] != 1)
+                        ++target_x;
+                    else
+                        break;
+                }
+                else
+                    break;
+            }
+        }
+        else if (player->direction == 2)
+        {
+            for (int i = 1; i <= 5; ++i)
+            {
+                int r_check_0idx = (player->grid_y - 1) + i;
+                if (r_check_0idx < (BOARD_HEIGHT - 1))
+                {
+                    if ((*board)[r_check_0idx][player->grid_x - 1] != 1)
+                        ++target_y;
+                    else
+                        break;
+                }
+                else
+                    break;
+            }
+        }
+        else if (player->direction == 3)
+        {
+            for (int i = 1; i <= 5; ++i)
+            {
+                int c_check_0idx = (player->grid_x - 1) - i;
+                if (c_check_0idx > 0)
+                {
+                    if ((*board)[player->grid_y - 1][c_check_0idx] != 1)
+                        --target_x;
+                    else
+                        break;
+                }
+                else
+                    break;
+            }
+        }
+        break;
+
+      case 2:
+        if (player->direction == 0)
+        {
+            for (int i = 1; i <= 5; ++i)
+            {
+                int r_check_0idx = (player->grid_y - 1) - i;
+                
+                if (r_check_0idx >= 0)
+                {
+                    if ((*board)[r_check_0idx][player->grid_x - 1] != 1)
+                        --target_y;
+                    else
+                        break;
+                }
+                else
+                    break;
+            }
+        }
+        else if (player->direction == 1)
+        {
+            for (int i = 1; i <= 5; ++i)
+            {
+                int c_check_0idx = (player->grid_x - 1) + i;
+                
+                if (c_check_0idx < BOARD_WIDTH)
+                {
+                    if ((*board)[player->grid_y - 1][c_check_0idx] != 1)
+                        ++target_x;
+                    else
+                        break;
+                }
+                else
+                    break;
+            }
+        }
+        else if (player->direction == 2)
+        {
+            for (int i = 1; i <= 5; ++i)
+            {
+                int r_check_0idx = (player->grid_y - 1) + i;
+                
+                if (r_check_0idx < BOARD_HEIGHT)
+                {
+                    if ((*board)[r_check_0idx][player->grid_x - 1] != 1)
+                        ++target_y;
+                    else
+                        break;
+                }
+                else
+                    break;
+            }
+        }
+        else if (player->direction == 3)
+        {
+            for (int i = 1; i <= 5; ++i)
+            {
+                int c_check_0idx = (player->grid_x - 1) - i;
+                
+                if (c_check_0idx >= 0)
+                {
+                    if ((*board)[player->grid_y - 1][c_check_0idx] != 1)
+                        --target_x;
+                    else
+                        break;
+                }
+                else
+                    break;
+            }
+        }
+        break;
+      
+        
+      case 3:
+          std::vector<std::pair<int, int>> valid_positions;
+          for (int r = 0; r < BOARD_HEIGHT; ++r) {
+              for (int c = 0; c < BOARD_WIDTH; ++c) {
+                  if ((*board)[r][c] == 2) {
+                      valid_positions.push_back({r, c});
+                  }
+              }
+          }
+
+          if (!valid_positions.empty()) {
+              std::random_device rd; 
+              std::mt19937 gen(rd()); 
+              std::uniform_int_distribution<> distrib(0, valid_positions.size() - 1); 
+
+              int random_idx = distrib(gen);
+              target_y = valid_positions[random_idx].first;
+              target_x = valid_positions[random_idx].second;
+          }
+          
+          break;
+    }
+    int playerIndex = xyToIndex(target_x,target_y);
+
     int neighbor = bfs(board_graph, xyToIndex(grid_x - 1, grid_y - 1), playerIndex);
     
     if(neighbor / BOARD_WIDTH + 1 < grid_y)

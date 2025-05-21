@@ -17,8 +17,8 @@
             "type": "gdb",
             "request": "launch",
             "name": "Launch Program",
-            "target": "./builddir/pacman",
-            "cwd": "${workspaceRoot}",
+            "target": "${workspaceRoot}/builddir/pacman",
+            "cwd": "${workspaceRoot}/builddir",
             "valuesFormatting": "parseText"
         },
     ]

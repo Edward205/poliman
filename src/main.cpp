@@ -64,7 +64,7 @@ bool load_level(std::string file, PacmanGame* game)
     {
       if (game->board[i][j] == 5)
       {
-        game->entities.push_back(new Ghost(BOARD_CENTER_OFFSET_X + (j + 1) * TILE_WIDTH, BOARD_CENTER_OFFSET_Y + (i + 1) * TILE_HEIGHT, j + 1, i + 1, game->player, &game->board));
+        game->entities.push_back(new Ghost(BOARD_CENTER_OFFSET_X + (j + 1) * TILE_WIDTH, BOARD_CENTER_OFFSET_Y + (i + 1) * TILE_HEIGHT, j + 1, i + 1, game->entities.size(), game->player, &game->board));
       }
     }
   }
@@ -85,6 +85,8 @@ bool load_level(std::string file, PacmanGame* game)
   {
     std::cerr << "Failed to load game sprites" << std::endl; 
   }
+
+
   
   return true;
 }
