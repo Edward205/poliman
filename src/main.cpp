@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include "unistd.h"
 
 #include "SDL3/SDL_timer.h"
 #include "SDL3/SDL_init.h"
@@ -23,7 +24,7 @@ bool load_level(std::string file, PacmanGame* game)
     return false;
 
   game->entities.clear();
-
+  game->max_points = 0;
   // load board
   for(int i = 0; i < BOARD_HEIGHT; ++i)
   {
@@ -32,6 +33,8 @@ bool load_level(std::string file, PacmanGame* game)
       int aux;
       l >> aux;
       game->board[i][j] = aux;
+      if(aux == 2)
+        ++game->max_points;
     }
   }
 
@@ -60,7 +63,7 @@ bool load_level(std::string file, PacmanGame* game)
     }
   }
   
-    return true;
+  return true;
 }
 
 int main()
@@ -100,7 +103,8 @@ int main()
   }
   
   // load the first level
-  if(!load_level(level_files[1], &game))
+  int current_level = 0;
+  if(!load_level(level_files[current_level], &game))
   {
     std::cerr << "Failed to load level " << level_files[0] << std::endl;
     return 1;
@@ -173,6 +177,14 @@ int main()
       livesDisplay.x = 200;
       livesDisplay.y = 200;
       livesDisplay.render(renderer);
+    }
+
+    if(game.max_points == game.player->points)
+    {
+      usleep(2000000);
+      ++current_level;
+      if(!load_level(level_files[current_level], &game))
+        std::cerr << "Failed to load level " << level_files[current_level] << std::endl;
     }
 
     // display the frame (flip buffer)
