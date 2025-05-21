@@ -4,8 +4,7 @@
 #include "include/entity.h"
 #include "include/player.h"
 #include <vector>
-class Ghost: public Entity 
-{
+class Ghost: public Entity {
 public:
     Ghost(Player* player, int (*)[BOARD_HEIGHT][BOARD_WIDTH]);
     Ghost(int x, int y, int grid_x, int grid_y, int type, Player* player, int (*)[BOARD_HEIGHT][BOARD_WIDTH]);

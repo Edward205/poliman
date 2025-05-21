@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "SDL3/SDL_events.h"
+#include "SDL3/SDL_scancode.h"
 #include "SDL3/SDL_timer.h"
 #include "SDL3/SDL_init.h"
 
@@ -168,6 +170,19 @@ int main()
       case SDL_EVENT_QUIT: // pressing the close button
       {
         is_running = false; // end the main loop
+      }
+      case SDL_EVENT_KEY_DOWN:
+      {
+        if(event.key.scancode == SDL_SCANCODE_LEFTBRACKET && current_level > 0)
+        {
+          --current_level;
+          load_level(level_files[current_level], &game);
+        }
+        if(event.key.scancode == SDL_SCANCODE_RIGHTBRACKET && current_level < 2)
+        {
+          ++current_level;
+          load_level(level_files[current_level], &game);
+        }
       }
       break;
       }
