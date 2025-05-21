@@ -2,7 +2,6 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "unistd.h"
 
 #include "SDL3/SDL_timer.h"
 #include "SDL3/SDL_init.h"
@@ -45,6 +44,8 @@ bool load_level(std::string file, PacmanGame* game)
     {
       if (game->board[i][j] == 4)
       {
+        if(game->player != nullptr)
+          delete game->player;
         game->player = new Player(BOARD_CENTER_OFFSET_X + (j + 1) * TILE_WIDTH, BOARD_CENTER_OFFSET_Y + (i + 1) * TILE_HEIGHT, j + 1, i + 1, &game->board);
         break;
       }
@@ -181,7 +182,7 @@ int main()
 
     if(game.max_points == game.player->points)
     {
-      usleep(2000000);
+      SDL_Delay(2000);
       ++current_level;
       if(!load_level(level_files[current_level], &game))
         std::cerr << "Failed to load level " << level_files[current_level] << std::endl;
