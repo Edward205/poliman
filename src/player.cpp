@@ -1,4 +1,6 @@
 #include "SDL3/SDL_render.h"
+#include "SDL3/SDL_surface.h"
+
 #include "include/defines.h"
 #include "include/player.h"
 
@@ -17,6 +19,21 @@ Player::Player()
   this->grid_x = 0;
   this->grid_y = 0;
   this->board = nullptr;
+}
+bool Player::loadSprite(SDL_Renderer *renderer, const char* sprite)
+{
+  surface = SDL_LoadBMP(sprite);
+  if(!surface)
+      return false;
+
+  SDL_Texture* aux_texture = SDL_CreateTextureFromSurface(renderer, surface);
+  SDL_DestroySurface(surface);
+  if(!aux_texture)
+      return false;
+
+  SDL_SetTextureScaleMode(aux_texture, SDL_SCALEMODE_NEAREST);
+  texture = aux_texture;
+  return true;
 }
 
 void Player::handleInput()
@@ -111,21 +128,39 @@ void Player::tick()
     (*board)[grid_y - 1][grid_x - 1] = 0;
     ++points;
   }
+
+  // animation logic
+  if(elapsed_since_animation_frame >= ticks_per_animation_frame && direction != 5)
+  {
+    elapsed_since_animation_frame = 0;
+    if(current_animation_frame < 3)
+      ++current_animation_frame;
+    else
+      current_animation_frame = 0;
+  }
+
+  ++elapsed_since_animation_frame;
 }
 
 void Player::render(SDL_Renderer *renderer)
 {
-  SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+  int y_offset;
+  if(direction < 5)
+    y_offset = 32 * direction;
+  else
+    y_offset = 32 * 2;
 
-  sprite.w = 11;
-  sprite.h = 11;
-  sprite.x = x;
-  sprite.y = y;
-  SDL_RenderFillRect(renderer, &sprite);
+  int x_offset = 32 * current_animation_frame;
+
+  SDL_FRect srcrect({(float) x_offset, (float) y_offset, 32, 32});
+  SDL_FRect destrect({(float) x - 16, (float) y - 16, 32, 32});
+
+  SDL_RenderTexture(renderer, texture, &srcrect, &destrect);
 }
 
 Player::~Player()
 {
+  SDL_DestroySurface(surface);
 }
 
 bool Player::isValidDirection(int direction)

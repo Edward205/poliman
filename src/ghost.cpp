@@ -1,5 +1,6 @@
 #include "include/ghost.h"
 #include "SDL3/SDL_render.h"
+#include "SDL3/SDL_surface.h"
 #include <queue>
 
 Ghost::Ghost(Player *player, int (*board)[BOARD_HEIGHT][BOARD_WIDTH])
@@ -19,6 +20,22 @@ Ghost::Ghost(int x, int y, int grid_x, int grid_y, Player *player, int (*board)[
   this->player = player;
   this->board = board;
 }
+bool Ghost::loadSprite(SDL_Renderer *renderer, const char* sprite)
+{
+  surface = SDL_LoadBMP(sprite);
+  if(!surface)
+      return false;
+
+  SDL_Texture* aux_texture = SDL_CreateTextureFromSurface(renderer, surface);
+  SDL_DestroySurface(surface);
+  if(!aux_texture)
+      return false;
+
+  SDL_SetTextureScaleMode(aux_texture, SDL_SCALEMODE_NEAREST);
+  texture = aux_texture;
+  return true;
+}
+
 
 void Ghost::tick()
 {
@@ -86,20 +103,49 @@ void Ghost::tick()
 
     int playerIndex = xyToIndex(player->grid_x - 1, player->grid_y - 1);
     int neighbor = bfs(board_graph, xyToIndex(grid_x - 1, grid_y - 1), playerIndex);
+    
+    if(neighbor / BOARD_WIDTH + 1 < grid_y)
+      direction = 0;
+    if(neighbor % BOARD_WIDTH + 1 > grid_x)
+      direction = 1;
+    if(neighbor / BOARD_WIDTH + 1 > grid_y)
+      direction = 2;
+    if(neighbor % BOARD_WIDTH + 1 < grid_x)
+      direction = 3;
+    
     grid_x = neighbor % BOARD_WIDTH + 1;
     grid_y = neighbor / BOARD_WIDTH + 1;
   }
+
+    // animation logic
+    if(elapsed_since_animation_frame >= ticks_per_animation_frame && direction != 5)
+    {
+      elapsed_since_animation_frame = 0;
+      if(current_animation_frame < 3)
+        ++current_animation_frame;
+      else
+        current_animation_frame = 0;
+    }
+  
+    ++elapsed_since_animation_frame;  
 }
 
 void Ghost::render(SDL_Renderer *renderer)
 {
   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
-  sprite.w = 5;
-  sprite.h = 5;
-  sprite.x = x;
-  sprite.y = y;
-  SDL_RenderFillRect(renderer, &sprite);
+  int y_offset;
+  if(direction < 5)
+    y_offset = 32 * direction;
+  else
+    y_offset = 32 * 2;
+
+  int x_offset = 32 * current_animation_frame;
+
+  SDL_FRect srcrect({(float) x_offset, (float) y_offset, 32, 32});
+  SDL_FRect destrect({(float) x - 16, (float) y - 16, 32, 32});
+
+  SDL_RenderTexture(renderer, texture, &srcrect, &destrect);
 }
 
 int Ghost::xyToIndex(int x, int y)
@@ -151,4 +197,9 @@ int Ghost::bfs(const std::vector<std::vector<int>> &graph, int start, int target
     }
   }
   return -1;
+}
+
+Ghost::~Ghost()
+{
+  SDL_DestroySurface(surface);
 }

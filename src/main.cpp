@@ -12,6 +12,8 @@
 #include "include/player.h"
 #include "include/defines.h"
 
+SDL_Renderer *renderer;
+
 PacmanGame game;
 Quiz quiz;
 
@@ -47,6 +49,9 @@ bool load_level(std::string file, PacmanGame* game)
         if(game->player != nullptr)
           delete game->player;
         game->player = new Player(BOARD_CENTER_OFFSET_X + (j + 1) * TILE_WIDTH, BOARD_CENTER_OFFSET_Y + (i + 1) * TILE_HEIGHT, j + 1, i + 1, &game->board);
+        
+        if(!game->player->loadSprite(renderer, "../res/student.bmp"))
+          std::cerr << "Failed to load player sprite" << std::endl;
         break;
       }
     }
@@ -62,6 +67,11 @@ bool load_level(std::string file, PacmanGame* game)
         game->entities.push_back(new Ghost(BOARD_CENTER_OFFSET_X + (j + 1) * TILE_WIDTH, BOARD_CENTER_OFFSET_Y + (i + 1) * TILE_HEIGHT, j + 1, i + 1, game->player, &game->board));
       }
     }
+  }
+  // load the entities sprites
+  for(auto entity : game->entities)
+  {
+    entity->loadSprite(renderer, "../res/professor.bmp");
   }
   
   return true;
@@ -84,7 +94,7 @@ int main()
     return EXIT_FAILURE;
   }
 
-  SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
+  renderer = SDL_CreateRenderer(window, NULL);
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
   bool is_running = true;
 

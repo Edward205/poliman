@@ -18,6 +18,15 @@ public:
     void tick();
     void render(SDL_Renderer *renderer);
     int bfs(const std::vector<std::vector<int>>& graph, int start, int target);
+    ~Ghost();
+    bool loadSprite(SDL_Renderer *renderer, const char* sprite);
 private:
     int xyToIndex(int x, int y);
+
+    SDL_Texture* texture;
+    SDL_Surface* surface;
+
+    int current_animation_frame = 0;
+    int ticks_per_animation_frame = 4;
+    int elapsed_since_animation_frame = 0;
 };
