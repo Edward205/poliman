@@ -66,7 +66,7 @@ bool load_level(std::string file, PacmanGame* game)
 int main()
 {
   // initialise SDL
-  if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO))
+  if (!SDL_Init(SDL_INIT_VIDEO))
   {
     std::cerr << "SDL_Init failed: " << SDL_GetError() << std::endl;
     return EXIT_FAILURE;
@@ -100,7 +100,7 @@ int main()
   }
   
   // load the first level
-  if(!load_level(level_files[0], &game))
+  if(!load_level(level_files[1], &game))
   {
     std::cerr << "Failed to load level " << level_files[0] << std::endl;
     return 1;
@@ -162,6 +162,18 @@ int main()
 
     livesDisplay.text = std::to_string(game.lives);
     livesDisplay.render(renderer);
+
+    if(game.lives <= 0)
+    {
+      SDL_SetRenderDrawColor(renderer, 40, 0, 0, 255);
+      SDL_RenderClear(renderer);
+      livesDisplay.text = "RESTANTA !!!";
+      livesDisplay.scale = 6;
+      livesDisplay.max_chars = 15;
+      livesDisplay.x = 200;
+      livesDisplay.y = 200;
+      livesDisplay.render(renderer);
+    }
 
     // display the frame (flip buffer)
     SDL_RenderPresent(renderer);

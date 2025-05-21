@@ -94,7 +94,7 @@ void Player::tick()
   }
   if (grid_y > BOARD_HEIGHT)
   {
-    grid_y = 0;
+    grid_y = 1;
     desired_y = BOARD_CENTER_OFFSET_Y + grid_y * (TILE_HEIGHT) - (sprite.h / 2 + ((TILE_HEIGHT) / 2));
     y = desired_y;
   }
@@ -133,7 +133,7 @@ bool Player::isValidDirection(int direction)
   // do not change this. trust me, it works
 
   // check if ahead of the player is the board limit
-  if (grid_x >= BOARD_WIDTH || grid_x - 1 <= 0 || grid_y >= BOARD_HEIGHT || grid_y - 1 <= 0)
+  if (grid_x >= BOARD_WIDTH || grid_x - 1 <= 0 || grid_y >= BOARD_HEIGHT + 1 || grid_y - 1 <= 0)
     return true; // allow the player to exit the area, in which case the wrap-around logic activates
 
   // check if ahead of the player is a wall
