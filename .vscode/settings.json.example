@@ -1,9 +1,0 @@
-{
-    "clangd.arguments": [
-        "-background-index",
-        "-compile-commands-dir=builddir"
-    ],
-    "C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild",
-}
-
-/* rename this file to settings.json to fix clangd if it's not working */

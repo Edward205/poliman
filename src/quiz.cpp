@@ -9,11 +9,11 @@
 
 void Quiz::init(SDL_Renderer *renderer)
 {
-    question = new FontRenderer(renderer, "../res/monogram.bmp", 90, 180, 2, 53);
-    answer1 = new Button(renderer, 90, 180+(70*1), 656, 40, 50, "caca");
-    answer2 = new Button(renderer, 90, 180+(70*2), 656, 40, 50, "caca");
-    answer3 = new Button(renderer, 90, 180+(70*3), 656, 40, 50, "caca");
-    answer4 = new Button(renderer, 90, 180+(70*4), 656, 40, 50, "caca");
+    question = new FontRenderer(renderer, "../res/monogram.bmp", WINDOW_WIDTH / 2 - 656 / 2, 180, 2, 53);
+    answer1 = new Button(renderer, WINDOW_WIDTH / 2 - 656 / 2, 320+(70*1), 656, 40, 50, "caca");
+    answer2 = new Button(renderer, WINDOW_WIDTH / 2 - 656 / 2, 320+(70*2), 656, 40, 50, "caca");
+    answer3 = new Button(renderer, WINDOW_WIDTH / 2 - 656 / 2, 320+(70*3), 656, 40, 50, "caca");
+    answer4 = new Button(renderer, WINDOW_WIDTH / 2 - 656 / 2, 320+(70*4), 656, 40, 50, "caca");
 }
 
 void Quiz::handleInput(SDL_Event e)

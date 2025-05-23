@@ -9,7 +9,7 @@ public:
     Ghost(Player* player, int (*)[BOARD_HEIGHT][BOARD_WIDTH]);
     Ghost(int x, int y, int grid_x, int grid_y, int type, Player* player, int (*)[BOARD_HEIGHT][BOARD_WIDTH]);
     int (*board)[BOARD_HEIGHT][BOARD_WIDTH];
-    int desired_speed = 5;
+    int desired_speed = 3;
     int desired_x = 0;
     int desired_y = 0;
     int type;
