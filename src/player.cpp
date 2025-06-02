@@ -16,8 +16,8 @@ Player::Player()
 {
   this->x = 0;
   this->y = 0;
-  this->grid_x = 0;
-  this->grid_y = 0;
+  this->grid_x = 1;
+  this->grid_y = 1;
   this->board = nullptr;
 }
 bool Player::loadSprite(SDL_Renderer *renderer, const char* sprite)

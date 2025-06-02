@@ -9,7 +9,7 @@ public:
     int grid_y = 0;
     int desired_x = 0; // for smooth movment
     int desired_y = 0;
-    int direction = 0; // rotation in clockwise order (0 = up, 1 = right, 2 = down, 3 = left)
+    int direction = 1; // rotation in clockwise order (0 = up, 1 = right, 2 = down, 3 = left)
     int init_grid_x = 0, init_grid_y = 0;
     SDL_FRect sprite;
     virtual ~Entity() = default;
